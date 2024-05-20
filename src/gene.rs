@@ -24,7 +24,7 @@ impl Gene {
             Gene::Y => 16,
             Gene::H => 8,
             Gene::X => 0,
-            Gene::W => -16,
+            Gene::W => 0,
         }
     }
 
@@ -42,6 +42,16 @@ impl Gene {
             _ => {
                 unreachable!()
             }
+        }
+    }
+
+    pub const fn to_char(self) -> char {
+        match self {
+            Gene::G => 'G',
+            Gene::Y => 'Y',
+            Gene::H => 'H',
+            Gene::X => 'X',
+            Gene::W => 'W',
         }
     }
 }

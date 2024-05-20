@@ -46,9 +46,9 @@ mod tests {
 
         #[test]
         fn simple_singular() {
-                let mut breeder = Crossbreeder::new();
-                breeder.add(make_plant!("YYYWWW"));
-                assert_eq!(breeder.winner(), make_plant!("YYYWWW"));
+            let mut breeder = Crossbreeder::new();
+            breeder.add(make_plant!("YYYWWW"));
+            assert_eq!(breeder.winner(), make_plant!("YYYWWW"));
         }
 
         #[test]

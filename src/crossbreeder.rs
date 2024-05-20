@@ -1,6 +1,6 @@
-use std::array::from_fn;
 use crate::gene::Gene;
 use crate::plant::Plant;
+use std::array::from_fn;
 
 impl Crossbreeder {
     pub fn new() -> Self {
@@ -15,8 +15,16 @@ impl Crossbreeder {
         }
     }
     pub fn winner(&self) -> Plant {
-        let mut iter = self.acum.iter().map(|e|e.most_dominant());
-       Plant::from_genes(from_fn(|_|iter.next().unwrap()))
+        let mut iter = self.acum.iter().map(|e| e.most_dominant());
+        Plant::from_genes(from_fn(|_| iter.next().unwrap()))
+    }
+
+    pub fn from_iter<'a>(iter: impl Iterator<Item = &'a Plant>) -> Self {
+        let mut breeder = Self::new();
+        for &plant in iter {
+            breeder.add(plant)
+        }
+        breeder
     }
 }
 
