@@ -1,3 +1,4 @@
+use std::array::from_fn;
 use std::str::FromStr;
 use crate::gene::Gene;
 
@@ -22,15 +23,7 @@ impl FromStr for Plant {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         assert_eq!(s.len(), 6);
         let mut iter = s.chars().map(|g| Gene::from_char(g));
-        let genes = [
-            iter.next().unwrap(),
-            iter.next().unwrap(),
-            iter.next().unwrap(),
-            iter.next().unwrap(),
-            iter.next().unwrap(),
-            iter.next().unwrap(),
-        ];
-        Ok(Self { genes })
+        Ok(Self { genes: from_fn(|_|iter.next().unwrap()) })
     }
 }
 
