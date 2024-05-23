@@ -1,6 +1,7 @@
 use crate::gene::Gene;
 use crate::plant::Plant;
 use std::array::from_fn;
+use crate::traits::PlantImpl;
 
 impl Crossbreeder {
     pub fn new() -> Self {
@@ -8,9 +9,9 @@ impl Crossbreeder {
             acum: [BreedWeights::new(); 6],
         }
     }
-    pub fn add(&mut self, plant: Plant) {
+    pub fn add(&mut self, plant: impl PlantImpl) {
         for (index, weight) in self.acum.iter_mut().enumerate() {
-            let gene = plant.genes()[index];
+            let gene = plant.genes().nth(index).unwrap();
             weight.add(gene);
         }
     }

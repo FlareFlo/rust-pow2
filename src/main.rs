@@ -2,6 +2,7 @@ use std::time::Instant;
 use itertools::Itertools;
 use rust_pow2::crossbreeder::Crossbreeder;
 use rust_pow2::plant::Plant;
+use rust_pow2::traits::PlantImpl;
 use rayon::prelude::*;
 
 

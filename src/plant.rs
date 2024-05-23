@@ -4,6 +4,7 @@ use std::fmt::{Display, Formatter};
 use std::fs;
 use std::path::Path;
 use std::str::FromStr;
+use crate::traits::PlantImpl;
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub struct Plant {
@@ -11,21 +12,6 @@ pub struct Plant {
 }
 
 impl Plant {
-    pub fn from_genes(genes: [Gene; 6]) -> Self {
-        Self { genes }
-    }
-
-    pub fn score(self) -> i8 {
-        self.genes.into_iter().map(|e| e.score()).sum()
-    }
-
-    pub fn avg_score(self) -> f64 {
-        self.score() as f64 / 16.0
-    }
-    pub fn genes(&self) -> &[Gene] {
-        &self.genes
-    }
-
     pub fn from_file(path: impl AsRef<Path>) -> Vec<Self> {
         let read = fs::read_to_string(path).unwrap();
         read.split("\n")
@@ -56,29 +42,12 @@ impl Display for Plant {
     }
 }
 
-#[macro_export]
-macro_rules! make_plant {
-    ($input:literal) => {
-        <crate::plant::Plant as std::str::FromStr>::from_str($input).unwrap()
-    };
-}
+impl PlantImpl for Plant {
+    fn from_genes(genes: [Gene; 6]) -> Self {
+        Self { genes }
+    }
 
-#[macro_export]
-macro_rules! impl_gene_count {
-    ($gene_type: ident, $fn_name: ident) => {
-        pub fn $fn_name(self) -> u8 {
-            self.genes
-                .iter()
-                .filter(|&&e| e == Gene::$gene_type)
-                .count() as u8
-        }
-    };
-}
-
-impl Plant {
-    impl_gene_count!(G, count_g);
-    impl_gene_count!(Y, count_y);
-    impl_gene_count!(H, count_h);
-    impl_gene_count!(X, count_x);
-    impl_gene_count!(W, count_w);
+    fn genes(&self) -> impl Iterator<Item=Gene> {
+        self.genes.into_iter()
+    }
 }
