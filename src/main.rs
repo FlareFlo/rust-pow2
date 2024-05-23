@@ -19,14 +19,14 @@ fn main() {
     }
 }
 
-fn breed(plants: impl Iterator<Item = Plant>) -> impl Iterator<Item = Plant> + DoubleEndedIterator {
+fn breed<T: PlantImpl + Clone + Sized>(plants: impl Iterator<Item = T>) -> impl Iterator<Item = T> + DoubleEndedIterator {
     let start = Instant::now();
-    let permutations: Vec<Vec<Plant>> = plants.into_iter().permutations(4).collect();
+    let permutations: Vec<Vec<T>> = plants.into_iter().permutations(4).collect();
     dbg!("Compute useful permutations", start.elapsed());
 
     let start = Instant::now();
-    let mut new: Vec<Plant> = permutations
-        .into_par_iter()
+    let mut new: Vec<T> = permutations
+        .into_iter()
         .map(|permutation| {
             let breeder = Crossbreeder::from_iter(permutation.iter());
             breeder.winner()

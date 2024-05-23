@@ -15,15 +15,15 @@ impl Crossbreeder {
             weight.add(gene);
         }
     }
-    pub fn winner(&self) -> Plant {
+    pub fn winner<T: PlantImpl>(&self) -> T {
         let mut iter = self.acum.iter().map(|e| e.most_dominant());
-        Plant::from_genes(from_fn(|_| iter.next().unwrap()))
+        PlantImpl::from_genes(from_fn(|_| iter.next().unwrap()))
     }
 
-    pub fn from_iter<'a>(iter: impl Iterator<Item = &'a Plant>) -> Self {
+    pub fn from_iter<'a, T: PlantImpl + Clone + 'a>(iter: impl Iterator<Item = &'a T>) -> Self {
         let mut breeder = Self::new();
-        for &plant in iter {
-            breeder.add(plant)
+        for plant in iter {
+            breeder.add(plant.clone())
         }
         breeder
     }
