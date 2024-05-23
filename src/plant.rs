@@ -28,7 +28,9 @@ impl Plant {
 
     pub fn from_file(path: impl AsRef<Path>) -> Vec<Self> {
         let read = fs::read_to_string(path).unwrap();
-        read.split("\n").map(|e|Self::from_str(e).unwrap()).collect()
+        read.split("\n")
+            .map(|e| Self::from_str(e).unwrap())
+            .collect()
     }
 }
 
@@ -57,7 +59,7 @@ impl Display for Plant {
 #[macro_export]
 macro_rules! make_plant {
     ($input:literal) => {
-        <rust_pow2::plant::Plant as std::str::FromStr>::from_str($input).unwrap()
+        <crate::plant::Plant as std::str::FromStr>::from_str($input).unwrap()
     };
 }
 
