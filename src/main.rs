@@ -1,3 +1,4 @@
+use std::fmt::Debug;
 use std::time::Instant;
 use itertools::Itertools;
 use rust_pow2::crossbreeder::Crossbreeder;
@@ -11,7 +12,11 @@ fn main() {
     plants.sort_unstable_by_key(|e| e.score());
     plants.reverse();
 
-   let new = breed(plants.into_iter().take(15));
+    let mut new = vec![];
+    new.extend(breed::<4, _>(plants.clone().into_iter().take(15)));
+    new.extend(breed::<3, _>(plants.clone().into_iter().take(15)));
+    new.extend(breed::<2, _>(plants.clone().into_iter().take(15)));
+    new.sort_unstable_by_key(|e| e.score());
 
     println!("Top 10 plants:");
     for result in new.into_iter().rev().dedup().take(10) {
@@ -19,10 +24,10 @@ fn main() {
     }
 }
 
-fn breed<T: PlantImpl + Clone + Sized>(plants: impl Iterator<Item = T>) -> impl Iterator<Item = T> + DoubleEndedIterator {
+fn breed<const PERMUTATIONS: usize, T: PlantImpl + Clone + Sized + Debug, >(plants: impl Iterator<Item = T>) -> impl Iterator<Item = T> + DoubleEndedIterator {
     let start = Instant::now();
-    let permutations: Vec<Vec<T>> = plants.into_iter().permutations(4).collect();
-    dbg!("Compute useful permutations", start.elapsed());
+    let permutations: Vec<[T; PERMUTATIONS]> = plants.into_iter().permutations(PERMUTATIONS).map(|e|e.try_into().unwrap()).collect();
+    dbg!(start.elapsed());
 
     let start = Instant::now();
     let mut new: Vec<T> = permutations
@@ -32,8 +37,7 @@ fn breed<T: PlantImpl + Clone + Sized>(plants: impl Iterator<Item = T>) -> impl 
             breeder.winner()
         })
         .collect();
-    dbg!("Crossbreed", start.elapsed());
+    dbg!(start.elapsed());
 
-    new.sort_unstable_by_key(|lhs| lhs.score());
     new.into_iter()
 }
