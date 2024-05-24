@@ -1,5 +1,4 @@
 use crate::gene::Gene;
-use crate::plant::Plant;
 use crate::traits::PlantImpl;
 use std::array::from_fn;
 
