@@ -6,10 +6,6 @@ authors = ["FlareFlo"]
 description = "Library to compute optimal cross-breeding setup for plants in the game Rust"
 license = "MIT"
 
-[package.metadata.wapm]
-namespace = "FlareFlo"
-abi = "wasi"
-bindings = { wai-version = "0.1.0", exports = "rust_pow2.wai"}
 
 [lib]
 name = "rust_pow2"
@@ -21,4 +17,3 @@ path = "src/main.rs"
 
 [dependencies]
 itertools = "0.13.0"
-wai-bindgen-rust = "0.2.3"
