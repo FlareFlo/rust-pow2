@@ -1,10 +1,10 @@
 use crate::gene::Gene;
+use crate::traits::PlantImpl;
 use std::array::from_fn;
 use std::fmt::{Display, Formatter};
 use std::fs;
 use std::path::Path;
 use std::str::FromStr;
-use crate::traits::PlantImpl;
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub struct Plant {
@@ -47,7 +47,7 @@ impl PlantImpl for Plant {
         Self { genes }
     }
 
-    fn genes(&self) -> impl Iterator<Item=Gene> {
+    fn genes(&self) -> impl Iterator<Item = Gene> {
         self.genes.into_iter()
     }
 }

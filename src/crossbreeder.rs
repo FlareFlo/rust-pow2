@@ -1,7 +1,7 @@
 use crate::gene::Gene;
 use crate::plant::Plant;
-use std::array::from_fn;
 use crate::traits::PlantImpl;
+use std::array::from_fn;
 
 impl Crossbreeder {
     pub fn new() -> Self {
