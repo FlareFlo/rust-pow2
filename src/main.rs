@@ -1,5 +1,4 @@
 use itertools::Itertools;
-use rayon::prelude::*;
 use rust_pow2::crossbreeder::Crossbreeder;
 use rust_pow2::plant::Plant;
 use rust_pow2::traits::PlantImpl;

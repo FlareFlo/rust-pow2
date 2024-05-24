@@ -31,6 +31,24 @@ mod tests {
         }
 
         #[test]
+        fn order_independent_middle() {
+            let mut breeder = BreedWeights::new();
+            breeder.add(Gene::Y);
+            breeder.add(Gene::H);
+            breeder.add(Gene::Y);
+            assert_eq!(breeder.most_dominant(), Gene::Y);
+        }
+
+        #[test]
+        fn order_independent_last() {
+            let mut breeder = BreedWeights::new();
+            breeder.add(Gene::Y);
+            breeder.add(Gene::Y);
+            breeder.add(Gene::H);
+            assert_eq!(breeder.most_dominant(), Gene::Y);
+        }
+
+        #[test]
         fn rock_paper_scissors() {
             let mut breeder = BreedWeights::new();
             breeder.add(Gene::H);
@@ -43,19 +61,20 @@ mod tests {
     mod breed_plants {
         use crate::crossbreeder::Crossbreeder;
         use crate::make_plant;
+        use crate::plant::Plant;
 
         #[test]
         fn simple_singular() {
             let mut breeder = Crossbreeder::new();
             breeder.add(make_plant!("YYYWWW"));
-            assert_eq!(breeder.winner(), make_plant!("YYYWWW"));
+            assert_eq!(breeder.winner::<Plant>(), make_plant!("YYYWWW"));
         }
 
         #[test]
         fn simple_pure() {
             let mut breeder = Crossbreeder::new();
             breeder.add(make_plant!("YYYYYY"));
-            assert_eq!(breeder.winner(), make_plant!("YYYYYY"));
+            assert_eq!(breeder.winner::<Plant>(), make_plant!("YYYYYY"));
         }
 
         #[test]
@@ -63,7 +82,7 @@ mod tests {
             let mut breeder = Crossbreeder::new();
             breeder.add(make_plant!("YYYYYY"));
             breeder.add(make_plant!("WWWWWW"));
-            assert_eq!(breeder.winner(), make_plant!("WWWWWW"));
+            assert_eq!(breeder.winner::<Plant>(), make_plant!("WWWWWW"));
         }
 
         #[test]
@@ -71,7 +90,7 @@ mod tests {
             let mut breeder = Crossbreeder::new();
             breeder.add(make_plant!("YWYWYW"));
             breeder.add(make_plant!("YYYYYY"));
-            assert_eq!(breeder.winner(), make_plant!("YWYWYW"));
+            assert_eq!(breeder.winner::<Plant>(), make_plant!("YWYWYW"));
         }
 
         #[test]
@@ -80,7 +99,7 @@ mod tests {
             breeder.add(make_plant!("YHGWWW"));
             breeder.add(make_plant!("GWGHWY"));
             breeder.add(make_plant!("WXGHYY"));
-            assert_eq!(breeder.winner(), make_plant!("WWGHWY"));
+            assert_eq!(breeder.winner::<Plant>(), make_plant!("WWGHWY"));
         }
     }
 }
