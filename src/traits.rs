@@ -12,11 +12,18 @@ pub trait PlantImpl {
         self.score() as f64 / 16.0
     }
 
-    crate::impl_gene_count!(G, count_g);
-    crate::impl_gene_count!(Y, count_y);
-    crate::impl_gene_count!(H, count_h);
-    crate::impl_gene_count!(X, count_x);
-    crate::impl_gene_count!(W, count_w);
+    fn is_useless(&self, red_threshold: u8) -> bool {
+        self.count_red() >= red_threshold
+    }
+
+    crate::impl_gene_match!(Gene::G, count_g);
+    crate::impl_gene_match!(Gene::Y, count_y);
+    crate::impl_gene_match!(Gene::H, count_h);
+    crate::impl_gene_match!(Gene::X, count_x);
+    crate::impl_gene_match!(Gene::W, count_w);
+
+    crate::impl_gene_match!(Gene::W | Gene::X, count_red);
+    crate::impl_gene_match!(Gene::Y | Gene::G | Gene::H, count_green);
 }
 
 #[macro_export]
@@ -27,10 +34,10 @@ macro_rules! make_plant {
 }
 
 #[macro_export]
-macro_rules! impl_gene_count {
-    ($gene_type: ident, $fn_name: ident) => {
+macro_rules! impl_gene_match {
+    ($pat: pat, $fn_name: ident) => {
         fn $fn_name(&self) -> u8 {
-            self.genes().filter(|&e| e == Gene::$gene_type).count() as u8
+            self.genes().filter(|&e| matches!(e, $pat)).count() as u8
         }
     };
 }
