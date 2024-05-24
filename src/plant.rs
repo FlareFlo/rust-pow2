@@ -14,7 +14,11 @@ pub struct Plant {
 impl Plant {
     pub fn from_file(path: impl AsRef<Path>) -> Vec<Self> {
         let read = fs::read_to_string(path).unwrap();
-        read.split("\n")
+        Self::from_strings(&read)
+    }
+
+    pub fn from_strings(s: &str) -> Vec<Self> {
+        s.split("\n")
             .map(|e| Self::from_str(e).unwrap())
             .collect()
     }
