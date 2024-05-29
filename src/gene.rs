@@ -1,3 +1,5 @@
+use std::fmt::{Display, Formatter};
+
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
 pub enum Gene {
     G,
@@ -53,5 +55,32 @@ impl Gene {
             Gene::X => 'X',
             Gene::W => 'W',
         }
+    }
+
+    pub fn to_digit(self) -> u8 {
+        match self {
+            Gene::G => 0,
+            Gene::Y => 1,
+            Gene::H => 2,
+            Gene::X => 3,
+            Gene::W => 4,
+        }
+    }
+
+    pub fn from_digit(digit: u8) -> Self {
+        match digit {
+            0 => Gene::G,
+            1 => Gene::Y,
+            2 => Gene::H,
+            3 => Gene::X,
+            4 => Gene::W,
+            _ => panic!("Invalid digit {digit} for Gene conversion"),
+        }
+    }
+}
+
+impl Display for Gene {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.to_char())
     }
 }

@@ -17,3 +17,6 @@ path = "src/main.rs"
 
 [dependencies]
 itertools = "0.13.0"
+
+[dev-dependencies]
+fastrand = "2.1.0"

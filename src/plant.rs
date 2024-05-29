@@ -18,9 +18,7 @@ impl Plant {
     }
 
     pub fn from_strings(s: &str) -> Vec<Self> {
-        s.split("\n")
-            .map(|e| Self::from_str(e).unwrap())
-            .collect()
+        s.split("\n").map(|e| Self::from_str(e).unwrap()).collect()
     }
 }
 
@@ -29,10 +27,8 @@ impl FromStr for Plant {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         assert_eq!(s.len(), 6);
-        let mut iter = s.chars().map(|g| Gene::from_char(g));
-        Ok(Self {
-            genes: from_fn(|_| iter.next().unwrap()),
-        })
+        let iter = s.chars().map(|g| Gene::from_char(g));
+        Ok(Self::from_iter(iter))
     }
 }
 

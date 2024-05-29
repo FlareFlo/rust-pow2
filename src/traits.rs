@@ -1,8 +1,18 @@
+use std::array::from_fn;
 use crate::gene::Gene;
 
 pub trait PlantImpl {
     fn from_genes(genes: [Gene; 6]) -> Self;
     fn genes(&self) -> impl Iterator<Item = Gene>;
+
+    fn from_iter(mut iter: impl Iterator<Item = Gene>) -> Self where Self: Sized {
+        PlantImpl::from_genes(from_fn(|_|iter.next().unwrap()))
+    }
+
+    fn genes_array(&self) -> [Gene; 6] {
+        let mut iter = self.genes();
+        from_fn(|_|iter.next().unwrap())
+    }
 
     fn score(&self) -> i8 {
         self.genes().into_iter().map(|e| e.score()).sum()

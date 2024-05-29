@@ -1,7 +1,7 @@
 use itertools::Itertools;
+use rust_pow2::breed;
 use rust_pow2::plant::Plant;
 use rust_pow2::traits::PlantImpl;
-use rust_pow2::breed;
 
 fn main() {
     let mut plants = Plant::from_file("plants.txt");

@@ -2,6 +2,13 @@ use crate::gene::Gene;
 use crate::traits::PlantImpl;
 use std::array::from_fn;
 
+#[derive(Debug)]
+pub struct Crossbreeder {
+    // In order: G Y H X W
+    acum: [BreedWeights; 6],
+}
+
+
 impl Crossbreeder {
     pub fn new() -> Self {
         Self {
@@ -14,9 +21,11 @@ impl Crossbreeder {
             weight.add(gene);
         }
     }
-    pub fn winner<T: PlantImpl>(&self) -> T {
-        let mut iter = self.acum.iter().map(|e| e.most_dominant());
-        PlantImpl::from_genes(from_fn(|_| iter.next().unwrap()))
+    pub fn winners<T: PlantImpl>(&self) -> impl Iterator<Item = T> {
+        let mut iter = self.acum.into_iter().map(|e| e.most_dominant());
+        dbg!(iter);
+        todo!("Create permutations from all dominant seeds");
+        iter.map(|e|PlantImpl::from_iter(e))
     }
 
     pub fn from_iter<'a, T: PlantImpl + Clone + 'a>(iter: impl Iterator<Item = &'a T>) -> Self {
@@ -28,7 +37,7 @@ impl Crossbreeder {
     }
 }
 
-#[derive(Copy, Clone)]
+#[derive(Debug, Copy, Clone)]
 pub struct BreedWeights {
     // G Y H X W with their weights
     genes: [u8; 5],
@@ -39,42 +48,22 @@ impl BreedWeights {
         Self { genes: [0; 5] }
     }
 
-    pub fn most_dominant(self) -> Gene {
-        let gene_index = self
+    pub fn most_dominant(self) -> impl Iterator<Item = Gene> {
+        let &max = self
             .genes
             .iter()
+            .max_by(|&&lhs, &rhs| lhs.cmp(rhs))
+            .unwrap();
+
+        self.genes
+            .into_iter()
             .enumerate()
-            .max_by(|&lhs, rhs| lhs.1.cmp(&rhs.1))
-            .map(|e| e.0);
-        match &gene_index {
-            Some(value) => match value {
-                0 => Gene::G,
-                1 => Gene::Y,
-                2 => Gene::H,
-                3 => Gene::X,
-                4 => Gene::W,
-                _ => unreachable!(),
-            },
-            None => {
-                unreachable!()
-            }
-        }
+            .filter(move |&e| e.1 == max)
+            .map(|e| Gene::from_digit(e.0 as u8))
     }
 
     pub fn add(&mut self, gene: Gene) {
-        let idx = match gene {
-            Gene::G => 0,
-            Gene::Y => 1,
-            Gene::H => 2,
-            Gene::X => 3,
-            Gene::W => 4,
-        } as usize;
-        let val = self.genes.get_mut(idx).unwrap();
+        let val = self.genes.get_mut(gene.to_digit() as usize).unwrap();
         *val = val.saturating_add(gene.breed_weight());
     }
-}
-
-pub struct Crossbreeder {
-    // In order: G Y H X W
-    acum: [BreedWeights; 6],
 }
