@@ -1,17 +1,31 @@
-use std::array::from_fn;
 use crate::gene::Gene;
+use crate::plant::Plant;
+use std::array::from_fn;
+use crate::from_into_impl;
+use crate::plant16::Plant16;
 
 pub trait PlantImpl {
     fn from_genes(genes: [Gene; 6]) -> Self;
     fn genes(&self) -> impl Iterator<Item = Gene>;
 
-    fn from_iter(mut iter: impl Iterator<Item = Gene>) -> Self where Self: Sized {
-        PlantImpl::from_genes(from_fn(|_|iter.next().unwrap()))
+    fn is_one_of_many(&self) -> bool;
+    fn set_one_of_many(&mut self, is_one_of_many: bool);
+
+    fn with_one_of_many(mut self, is_one_of_many: bool) -> Self where Self: Sized {
+        self.set_one_of_many(is_one_of_many);
+        self
+    }
+
+    fn from_iter(mut iter: impl Iterator<Item = Gene>) -> Self
+    where
+        Self: Sized,
+    {
+        PlantImpl::from_genes(from_fn(|_| iter.next().unwrap()))
     }
 
     fn genes_array(&self) -> [Gene; 6] {
         let mut iter = self.genes();
-        from_fn(|_|iter.next().unwrap())
+        from_fn(|_| iter.next().unwrap())
     }
 
     fn score(&self) -> i8 {
@@ -48,6 +62,19 @@ macro_rules! impl_gene_match {
     ($pat: pat, $fn_name: ident) => {
         fn $fn_name(&self) -> u8 {
             self.genes().filter(|&e| matches!(e, $pat)).count() as u8
+        }
+    };
+}
+
+from_into_impl!(Plant, Plant16);
+
+#[macro_export]
+macro_rules! from_into_impl {
+    ($from:ident, $to:ident) => {
+        impl From<$from> for $to {
+            fn from(value: Plant) -> Self {
+                Self::from_genes(value.genes_array())
+            }
         }
     };
 }

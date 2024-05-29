@@ -9,6 +9,7 @@ use std::str::FromStr;
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub struct Plant {
     genes: [Gene; 6],
+    is_one_of_many: bool,
 }
 
 impl Plant {
@@ -44,10 +45,21 @@ impl Display for Plant {
 
 impl PlantImpl for Plant {
     fn from_genes(genes: [Gene; 6]) -> Self {
-        Self { genes }
+        Self {
+            genes,
+            is_one_of_many: false,
+        }
     }
 
     fn genes(&self) -> impl Iterator<Item = Gene> {
         self.genes.into_iter()
+    }
+
+    fn is_one_of_many(&self) -> bool {
+        self.is_one_of_many
+    }
+
+    fn set_one_of_many(&mut self, is_one_of_many: bool) {
+        self.is_one_of_many = is_one_of_many;
     }
 }

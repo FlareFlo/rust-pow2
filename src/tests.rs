@@ -1,12 +1,18 @@
 #[cfg(test)]
 mod tests {
     mod breed_gene_weights {
-        use itertools::{ExactlyOneError, Itertools};
         use crate::crossbreeder::BreedWeights;
         use crate::gene::Gene;
+        use itertools::{ExactlyOneError, Itertools};
 
-        fn exact_winner(breed_weights: BreedWeights) -> Result<Gene, ExactlyOneError<std::vec::IntoIter<Gene>>> {
-            breed_weights.most_dominant().collect_vec().into_iter().exactly_one()
+        fn exact_winner(
+            breed_weights: BreedWeights,
+        ) -> Result<Gene, ExactlyOneError<std::vec::IntoIter<Gene>>> {
+            breed_weights
+                .most_dominant()
+                .collect_vec()
+                .into_iter()
+                .exactly_one()
         }
 
         #[test]
@@ -59,11 +65,15 @@ mod tests {
             breeder.add(Gene::H);
             breeder.add(Gene::Y);
             breeder.add(Gene::G);
-            assert_eq!(breeder.most_dominant().collect_vec(), [Gene::G, Gene::Y, Gene::H]);
+            assert_eq!(
+                breeder.most_dominant().collect_vec(),
+                [Gene::G, Gene::Y, Gene::H]
+            );
         }
     }
 
     mod breed_plants {
+        use itertools::Itertools;
         use crate::crossbreeder::Crossbreeder;
         use crate::make_plant;
         use crate::plant::Plant;
@@ -72,14 +82,20 @@ mod tests {
         fn simple_singular() {
             let mut breeder = Crossbreeder::new();
             breeder.add(make_plant!("YYYWWW"));
-            assert_eq!(breeder.winners::<Plant>().next().unwrap(), make_plant!("YYYWWW"));
+            assert_eq!(
+                breeder.winners::<Plant>().next().unwrap(),
+                make_plant!("YYYWWW")
+            );
         }
 
         #[test]
         fn simple_pure() {
             let mut breeder = Crossbreeder::new();
             breeder.add(make_plant!("YYYYYY"));
-            assert_eq!(breeder.winners::<Plant>().next().unwrap(), make_plant!("YYYYYY"));
+            assert_eq!(
+                breeder.winners::<Plant>().next().unwrap(),
+                make_plant!("YYYYYY")
+            );
         }
 
         #[test]
@@ -87,7 +103,10 @@ mod tests {
             let mut breeder = Crossbreeder::new();
             breeder.add(make_plant!("YYYYYY"));
             breeder.add(make_plant!("WWWWWW"));
-            assert_eq!(breeder.winners::<Plant>().next().unwrap(), make_plant!("WWWWWW"));
+            assert_eq!(
+                breeder.winners::<Plant>().next().unwrap(),
+                make_plant!("WWWWWW")
+            );
         }
 
         #[test]
@@ -95,16 +114,22 @@ mod tests {
             let mut breeder = Crossbreeder::new();
             breeder.add(make_plant!("YWYWYW"));
             breeder.add(make_plant!("YYYYYY"));
-            assert_eq!(breeder.winners::<Plant>().next().unwrap(), make_plant!("YWYWYW"));
+            assert_eq!(
+                breeder.winners::<Plant>().next().unwrap(),
+                make_plant!("YWYWYW")
+            );
         }
 
         #[test]
         fn trio() {
             let mut breeder = Crossbreeder::new();
-            breeder.add(make_plant!("YHGWWW"));
-            breeder.add(make_plant!("GWGHWY"));
-            breeder.add(make_plant!("WXGHYY"));
-            assert_eq!(breeder.winners::<Plant>().next().unwrap(), make_plant!("WWGHWY"));
+            breeder.add(make_plant!("YWWWWW"));
+            breeder.add(make_plant!("GWWWWW"));
+            breeder.add(make_plant!("HWWWWW"));
+            assert_eq!(
+                breeder.winners::<Plant>().collect_vec(),
+                vec![make_plant!("GWWWWW"),make_plant!("YWWWWW"),make_plant!("HWWWWW")]
+            );
         }
     }
 }
