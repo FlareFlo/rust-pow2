@@ -1,6 +1,7 @@
 use crate::gene::Gene;
 use crate::traits::PlantImpl;
 use std::array::from_fn;
+use itertools::Itertools;
 
 #[derive(Debug)]
 pub struct Crossbreeder {
@@ -21,11 +22,12 @@ impl Crossbreeder {
             weight.add(gene);
         }
     }
-    pub fn winners<T: PlantImpl>(&self) -> impl Iterator<Item = T> {
-        let mut iter = self.acum.into_iter().map(|e| e.most_dominant());
+    pub fn winners<T: PlantImpl + Copy>(&self) -> impl Iterator<Item = T> {
+        let mut iter = self.acum.into_iter().map(|e| e.most_dominant().collect_vec());
+        let mut iter: [Vec<Gene>; 6] = from_fn(|_| iter.next().unwrap());
         dbg!(iter);
         todo!("Create permutations from all dominant seeds");
-        iter.map(|e|PlantImpl::from_iter(e))
+        iter.map(|e|PlantImpl::from_iter(e.iter().copied())).iter().copied()
     }
 
     pub fn from_iter<'a, T: PlantImpl + Clone + 'a>(iter: impl Iterator<Item = &'a T>) -> Self {

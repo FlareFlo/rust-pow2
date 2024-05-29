@@ -11,7 +11,7 @@ mod tests;
 pub mod traits;
 mod plant16;
 
-pub fn breed<const PERMUTATIONS: usize, T: PlantImpl + Clone + Sized + Debug>(
+pub fn breed<const PERMUTATIONS: usize, T: PlantImpl + Clone + Sized + Debug + Copy>(
     plants: impl Iterator<Item = T>,
 ) -> impl Iterator<Item = T> + DoubleEndedIterator {
     let permutations = plants
