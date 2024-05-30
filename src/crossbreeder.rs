@@ -1,9 +1,9 @@
+use crate::crossbreeding_results::CrossbreedingResults;
 use crate::gene::Gene;
 use crate::traits::PlantImpl;
 use itertools::{iproduct, Itertools};
 use std::array::from_fn;
 use std::iter::once;
-use crate::crossbreeding_results::CrossbreedingResults;
 
 #[derive(Debug)]
 pub struct Crossbreeder {
@@ -28,7 +28,8 @@ impl Crossbreeder {
             .acum
             .into_iter()
             .map(|e| e.most_dominant().collect_vec());
-        iter.multi_cartesian_product().map(|e|T::from_iter(e.into_iter()))
+        iter.multi_cartesian_product()
+            .map(|e| T::from_iter(e.into_iter()))
     }
 
     pub fn from_iter<'a, T: PlantImpl + Clone + 'a>(iter: impl Iterator<Item = &'a T>) -> Self {

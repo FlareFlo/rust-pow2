@@ -1,8 +1,12 @@
+use crate::from_into_impl;
 use crate::gene::Gene;
 use crate::plant::Plant;
-use std::array::from_fn;
-use crate::from_into_impl;
 use crate::plant16::Plant16;
+use std::array::from_fn;
+use std::fmt::Debug;
+use std::fs;
+use std::path::Path;
+use std::str::FromStr;
 
 pub trait PlantImpl {
     fn from_genes(genes: [Gene; 6]) -> Self;
@@ -11,7 +15,10 @@ pub trait PlantImpl {
     fn is_one_of_many(&self) -> bool;
     fn set_one_of_many(&mut self, is_one_of_many: bool);
 
-    fn with_one_of_many(mut self, is_one_of_many: bool) -> Self where Self: Sized {
+    fn with_one_of_many(mut self, is_one_of_many: bool) -> Self
+    where
+        Self: Sized,
+    {
         self.set_one_of_many(is_one_of_many);
         self
     }
@@ -38,6 +45,15 @@ pub trait PlantImpl {
 
     fn is_useless(&self, red_threshold: u8) -> bool {
         self.count_red() >= red_threshold
+    }
+
+    fn from_file(path: impl AsRef<Path>) -> Vec<Self> where Self: Sized + FromStr + Debug, <Self as FromStr>::Err: Debug  {
+        let read = fs::read_to_string(path).unwrap();
+        Self::from_strings(&read)
+    }
+
+    fn from_strings(s: &str) -> Vec<Self> where Self: Sized + FromStr, <Self as FromStr>::Err: Debug  {
+        s.split("\n").map(|e| Self::from_str(e).unwrap()).collect()
     }
 
     crate::impl_gene_match!(Gene::G, count_g);

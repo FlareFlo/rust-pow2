@@ -12,17 +12,6 @@ pub struct Plant {
     is_one_of_many: bool,
 }
 
-impl Plant {
-    pub fn from_file(path: impl AsRef<Path>) -> Vec<Self> {
-        let read = fs::read_to_string(path).unwrap();
-        Self::from_strings(&read)
-    }
-
-    pub fn from_strings(s: &str) -> Vec<Self> {
-        s.split("\n").map(|e| Self::from_str(e).unwrap()).collect()
-    }
-}
-
 impl FromStr for Plant {
     type Err = ();
 

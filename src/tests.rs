@@ -73,10 +73,10 @@ mod tests {
     }
 
     mod breed_plants {
-        use itertools::Itertools;
         use crate::crossbreeder::Crossbreeder;
         use crate::make_plant;
         use crate::plant::Plant;
+        use itertools::Itertools;
 
         #[test]
         fn simple_singular() {
@@ -128,7 +128,11 @@ mod tests {
             breeder.add(make_plant!("HWWWWW"));
             assert_eq!(
                 breeder.winners::<Plant>().collect_vec(),
-                vec![make_plant!("GWWWWW"),make_plant!("YWWWWW"),make_plant!("HWWWWW")]
+                vec![
+                    make_plant!("GWWWWW"),
+                    make_plant!("YWWWWW"),
+                    make_plant!("HWWWWW")
+                ]
             );
         }
     }

@@ -3,6 +3,8 @@ use crate::traits::PlantImpl;
 use nonmax::NonMaxU16;
 use std::iter::once;
 use std::ops::Shr;
+use std::str::FromStr;
+use crate::plant::Plant;
 
 /// ID based plant set
 #[derive(Debug, Copy, Clone, Ord, PartialOrd, Eq, PartialEq)]
@@ -52,6 +54,17 @@ fn genes_to_index(genes: [Gene; 6]) -> u16 {
     }
     val & !NICHE_BIT
 }
+
+impl FromStr for Plant16 {
+    type Err = ();
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        assert_eq!(s.len(), 6);
+        let iter = s.chars().map(|g| Gene::from_char(g));
+        Ok(Self::from_iter(iter))
+    }
+}
+
 
 #[cfg(test)]
 mod test {
