@@ -1,8 +1,8 @@
-use std::time::Instant;
 use itertools::Itertools;
 use rust_pow2::breed;
 use rust_pow2::plant::Plant;
 use rust_pow2::traits::PlantImpl;
+use std::time::Instant;
 
 fn main() {
     let mut plants = Plant::from_file("plants.txt");
@@ -20,6 +20,11 @@ fn main() {
 
     println!("Top 10 plants:");
     for result in new.into_iter().rev().dedup().take(10) {
-        println!("Score: {} {} {:.1}%", result.0.avg_score(), result.0, 100.0 / result.1 as f64);
+        println!(
+            "Score: {} {} {:.1}%",
+            result.0.avg_score(),
+            result.0,
+            100.0 / result.1 as f64
+        );
     }
 }

@@ -1,9 +1,6 @@
 use crate::gene::Gene;
 use crate::traits::PlantImpl;
-use std::array::from_fn;
 use std::fmt::{Display, Formatter};
-use std::fs;
-use std::path::Path;
 use std::str::FromStr;
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]

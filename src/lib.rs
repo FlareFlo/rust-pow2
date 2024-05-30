@@ -3,11 +3,8 @@ use crate::plant::Plant;
 use crate::traits::PlantImpl;
 use itertools::Itertools;
 use std::fmt::Debug;
-use std::iter::once;
-use std::time::Instant;
 
 pub mod crossbreeder;
-mod crossbreeding_results;
 mod gene;
 pub mod plant;
 pub mod plant16;
@@ -30,7 +27,7 @@ pub fn breed<const PERMUTATIONS: usize, T: PlantImpl + Clone + Sized + Debug + C
         })
         .map(|probabilities| {
             let size = probabilities.size_hint().1.unwrap() as u8;
-            probabilities.map(move |e|(e, size))
+            probabilities.map(move |e| (e, size))
         })
         .flatten()
 }

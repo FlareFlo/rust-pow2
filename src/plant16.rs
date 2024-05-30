@@ -1,10 +1,7 @@
 use crate::gene::Gene;
 use crate::traits::PlantImpl;
 use nonmax::NonMaxU16;
-use std::iter::once;
-use std::ops::Shr;
 use std::str::FromStr;
-use crate::plant::Plant;
 
 /// ID based plant set
 #[derive(Debug, Copy, Clone, Ord, PartialOrd, Eq, PartialEq)]
@@ -64,7 +61,6 @@ impl FromStr for Plant16 {
         Ok(Self::from_iter(iter))
     }
 }
-
 
 #[cfg(test)]
 mod test {

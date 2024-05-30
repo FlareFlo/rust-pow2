@@ -1,9 +1,6 @@
-use crate::crossbreeding_results::CrossbreedingResults;
 use crate::gene::Gene;
 use crate::traits::PlantImpl;
-use itertools::{iproduct, Itertools};
-use std::array::from_fn;
-use std::iter::once;
+use itertools::Itertools;
 
 #[derive(Debug)]
 pub struct Crossbreeder {
@@ -24,7 +21,7 @@ impl Crossbreeder {
         }
     }
     pub fn winners<T: PlantImpl + Copy>(&self) -> impl Iterator<Item = T> {
-        let mut iter = self
+        let iter = self
             .acum
             .into_iter()
             .map(|e| e.most_dominant().collect_vec());

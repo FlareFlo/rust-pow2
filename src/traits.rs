@@ -47,12 +47,20 @@ pub trait PlantImpl {
         self.count_red() >= red_threshold
     }
 
-    fn from_file(path: impl AsRef<Path>) -> Vec<Self> where Self: Sized + FromStr + Debug, <Self as FromStr>::Err: Debug  {
+    fn from_file(path: impl AsRef<Path>) -> Vec<Self>
+    where
+        Self: Sized + FromStr + Debug,
+        <Self as FromStr>::Err: Debug,
+    {
         let read = fs::read_to_string(path).unwrap();
         Self::from_strings(&read)
     }
 
-    fn from_strings(s: &str) -> Vec<Self> where Self: Sized + FromStr, <Self as FromStr>::Err: Debug  {
+    fn from_strings(s: &str) -> Vec<Self>
+    where
+        Self: Sized + FromStr,
+        <Self as FromStr>::Err: Debug,
+    {
         s.split("\n").map(|e| Self::from_str(e).unwrap()).collect()
     }
 
