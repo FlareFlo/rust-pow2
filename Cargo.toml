@@ -15,6 +15,9 @@ path = "src/lib.rs"
 name = "rust_pow2"
 path = "src/main.rs"
 
+[profile.release]
+lto = true
+
 [dependencies]
 itertools = "0.13.0"
 nonmax = "0.5.5"

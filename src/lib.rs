@@ -2,9 +2,11 @@ extern crate core;
 
 use crate::crossbreeder::Crossbreeder;
 use crate::traits::PlantImpl;
-use itertools::Itertools;
+use itertools::{chain, Itertools};
 use std::array;
 use std::fmt::Debug;
+use std::time::Instant;
+use crate::plant::Plant;
 
 pub mod crossbreeder;
 mod gene;
@@ -40,4 +42,32 @@ pub fn breed<
             probabilities.map(move |e| (e, size, parents))
         })
         .flatten()
+}
+
+pub fn breed_plants(input: String) -> String {
+    let output = String::new();
+    let mut plants = Plant::from_strings(input);
+
+    plants.sort_unstable_by_key(|e| e.score());
+    plants.reverse();
+
+    let new = chain!(
+        breed::<4, 4, _>(plants.iter().copied()),
+        breed::<3, 4, _>(plants.iter().copied()),
+        breed::<2, 4, _>(plants.iter().copied()),
+    );
+
+    for (plant, count, parents) in new
+        .filter(|(p, _, _)| p.avg_score() >= 5.5)
+        .take(10)
+    {
+        writeln!(&mut output,
+            "Score: {} {} {:.1}% Parents: {}",
+            plant.avg_score(),
+            plant,
+            100.0 / count as f64,
+            parents.iter().filter_map(|&e| e).join(" ")
+        ).unwrap();
+    }
+    output
 }
