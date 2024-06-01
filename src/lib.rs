@@ -58,8 +58,8 @@ pub fn breed_plants(input: String) -> String {
 
     for (plant, count, parents) in new
         .filter(|(p, _, _)| p.avg_score() >= 5.5)
-        .sorted_by_key(|e|e.0.score())
-        .rev()
+        // .sorted_by_key(|e|e.0.score())
+        // .rev()
         .take(10)
     {
         output.push_str(&format!(
