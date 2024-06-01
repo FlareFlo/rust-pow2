@@ -12,11 +12,10 @@ fn main() {
     plants.reverse();
 
     let new = chain!(
-        breed::<4, 4, _>(plants.iter().copied().take(15)),
+        breed::<4, 4, _>(plants.iter().copied()),
         breed::<3, 4, _>(plants.iter().copied()),
         breed::<2, 4, _>(plants.iter().copied()),
     );
-    println!("{:?}", start.elapsed());
 
     println!("Top 10 plants:");
     for (plant, count, parents) in new
@@ -31,4 +30,5 @@ fn main() {
             parents.iter().filter_map(|&e| e).join(" ")
         );
     }
+    println!("Runtime: {:?}", start.elapsed());
 }

@@ -29,9 +29,10 @@ pub fn breed<
         .into_iter()
         .map(|permutation| {
             let breeder = Crossbreeder::from_iter(permutation.iter());
+            let mut parents = permutation.iter().copied();
             (
                 breeder.winners(),
-                array::from_fn(|_| permutation.iter().copied().next()),
+                array::from_fn(|_| parents.next()),
             )
         })
         .map(|(probabilities, parents)| {
