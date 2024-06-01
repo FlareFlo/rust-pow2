@@ -1,7 +1,9 @@
+extern crate core;
+
 use crate::crossbreeder::Crossbreeder;
-use crate::plant::Plant;
 use crate::traits::PlantImpl;
 use itertools::Itertools;
+use std::array;
 use std::fmt::Debug;
 
 pub mod crossbreeder;
@@ -11,9 +13,13 @@ pub mod plant16;
 mod tests;
 pub mod traits;
 
-pub fn breed<const PERMUTATIONS: usize, T: PlantImpl + Clone + Sized + Debug + Copy>(
+pub fn breed<
+    const PERMUTATIONS: usize,
+    const PARENTS_LIMIT: usize,
+    T: PlantImpl + Clone + Sized + Debug + Copy,
+>(
     plants: impl Iterator<Item = T>,
-) -> impl Iterator<Item = (Plant, u8)> {
+) -> impl Iterator<Item = (T, u8, [Option<T>; PARENTS_LIMIT])> {
     let permutations = plants
         .into_iter()
         .permutations(PERMUTATIONS)
@@ -23,11 +29,14 @@ pub fn breed<const PERMUTATIONS: usize, T: PlantImpl + Clone + Sized + Debug + C
         .into_iter()
         .map(|permutation| {
             let breeder = Crossbreeder::from_iter(permutation.iter());
-            breeder.winners()
+            (
+                breeder.winners(),
+                array::from_fn(|_| permutation.iter().copied().next()),
+            )
         })
-        .map(|probabilities| {
+        .map(|(probabilities, parents)| {
             let size = probabilities.size_hint().1.unwrap() as u8;
-            probabilities.map(move |e| (e, size))
+            probabilities.map(move |e| (e, size, parents))
         })
         .flatten()
 }
