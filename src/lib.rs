@@ -5,7 +5,6 @@ use crate::traits::PlantImpl;
 use itertools::{chain, Itertools};
 use std::array;
 use std::fmt::Debug;
-use std::time::Instant;
 use crate::plant::Plant;
 
 pub mod crossbreeder;
@@ -45,8 +44,8 @@ pub fn breed<
 }
 
 pub fn breed_plants(input: String) -> String {
-    let output = String::new();
-    let mut plants = Plant::from_strings(input);
+    let mut output = String::new();
+    let mut plants = Plant::from_strings(&input);
 
     plants.sort_unstable_by_key(|e| e.score());
     plants.reverse();
@@ -59,15 +58,17 @@ pub fn breed_plants(input: String) -> String {
 
     for (plant, count, parents) in new
         .filter(|(p, _, _)| p.avg_score() >= 5.5)
+        .sorted_by_key(|e|e.0.score())
+        .rev()
         .take(10)
     {
-        writeln!(&mut output,
-            "Score: {} {} {:.1}% Parents: {}",
+        output.push_str(&format!(
+            "Score: {} {} {:.1}% Parents: {} \n",
             plant.avg_score(),
             plant,
             100.0 / count as f64,
             parents.iter().filter_map(|&e| e).join(" ")
-        ).unwrap();
+        ));
     }
     output
 }
