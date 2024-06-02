@@ -18,10 +18,7 @@ fn main() {
     );
 
     println!("Top 10 plants:");
-    for (plant, count, parents) in new
-        .filter(|(p, _, _)| p.avg_score() >= 5.5)
-        .take(10)
-    {
+    for (plant, count, parents) in new.filter(|(p, _, _)| p.avg_score() >= 5.5).take(10) {
         println!(
             "Score: {} {} {:.1}% Parents: {}",
             plant.avg_score(),

@@ -1,11 +1,11 @@
 extern crate core;
 
 use crate::crossbreeder::Crossbreeder;
+use crate::plant::Plant;
 use crate::traits::PlantImpl;
 use itertools::{chain, Itertools};
 use std::array;
 use std::fmt::Debug;
-use crate::plant::Plant;
 
 pub mod crossbreeder;
 mod gene;
@@ -31,10 +31,7 @@ pub fn breed<
         .map(|permutation| {
             let breeder = Crossbreeder::from_iter(permutation.iter());
             let mut parents = permutation.iter().copied();
-            (
-                breeder.winners(),
-                array::from_fn(|_| parents.next()),
-            )
+            (breeder.winners(), array::from_fn(|_| parents.next()))
         })
         .map(|(probabilities, parents)| {
             let size = probabilities.size_hint().1.unwrap() as u8;

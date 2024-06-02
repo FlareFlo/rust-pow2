@@ -1,3 +1,4 @@
+use arrayvec::ArrayVec;
 use crate::gene::Gene;
 use crate::traits::PlantImpl;
 use itertools::Itertools;
@@ -20,12 +21,15 @@ impl Crossbreeder {
             weight.add(gene);
         }
     }
-    pub fn winners<T: PlantImpl + Copy>(&self) -> impl Iterator<Item = T> {
-        let iter = self
-            .acum
+    pub fn winners<T: PlantImpl + Copy + Clone>(&self) -> impl Iterator<Item = T> {
+        self.acum
             .into_iter()
-            .map(|e| e.most_dominant().collect_vec());
-        iter.multi_cartesian_product()
+            .map(|e| {
+                let it = e.most_dominant();
+                let array: ArrayVec<Gene, 5> = ArrayVec::from_iter(it);
+                array.into_iter()
+            })
+            .multi_cartesian_product()
             .map(|e| T::from_iter(e.into_iter()))
     }
 
