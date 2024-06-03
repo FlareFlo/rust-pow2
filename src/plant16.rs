@@ -40,13 +40,7 @@ fn genes_to_index(genes: [Gene; 6]) -> u16 {
     let mut val: u16 = 0;
 
     for gene in genes {
-        let gene_val = match gene {
-            Gene::G => 0,
-            Gene::Y => 1,
-            Gene::H => 2,
-            Gene::X => 3,
-            Gene::W => 4,
-        };
+        let gene_val = gene.to_digit();
         val = val * 5 + gene_val as u16;
     }
     val & !NICHE_BIT
